@@ -1,0 +1,38 @@
+{
+    "name": "@pondigitalsolutions/opencommerce-api",
+    "version": "0.0.1",
+    "sideEffects": false,
+    "server": "server/index.js",
+    "main": "lib/index.cjs.js",
+    "module": "lib/index.es.js",
+    "types": "lib/index.d.ts",
+    "scripts": {
+        "build": "rimraf lib server && rollup -c",
+        "dev": "rollup -c -w",
+        "test": "jest",
+        "prepublish": "yarn build"
+    },
+    "publishConfig": {
+        "registry": "https://nexusrepo.pondevelopment.com/repository/reaction-commerce-api/",
+        "access": "restricted"
+    },
+    "dependencies": {
+        "@vue-storefront/core": "^2.3.0",
+        "apollo-cache-inmemory": "^1.6.6",
+        "apollo-client": "^2.6.10",
+        "apollo-link-context": "^1.0.20",
+        "apollo-link-http": "^1.5.17",
+        "graphql": "^14.5.8",
+        "graphql-request": "^3.4.0",
+        "graphql-tag": "^2.10.1",
+        "isomorphic-fetch": "^3.0.0"
+    },
+    "devDependencies": {
+        "graphql-tools": "^4.0.6",
+        "jest-transform-graphql": "^2.1.0",
+        "rollup-plugin-graphql": "^0.1.0"
+    },
+    "files": [
+        "lib/**/*"
+    ]
+}

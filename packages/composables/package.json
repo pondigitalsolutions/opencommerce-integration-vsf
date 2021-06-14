@@ -1,0 +1,27 @@
+{
+    "name": "@pondigitalsolutions/opencommerce",
+    "version": "0.0.1",
+    "sideEffects": false,
+    "main": "lib/index.cjs.js",
+    "module": "lib/index.es.js",
+    "types": "lib/index.d.ts",
+    "scripts": {
+        "build": "rimraf lib && rollup -c",
+        "dev": "rollup -c -w",
+        "test": "jest",
+        "prepublish": "yarn build"
+    },
+    "dependencies": {
+        "@pondigitalsolutions/opencommerce-api": "^0.0.1",
+        "@vue-storefront/core": "^2.3.0"
+    },
+    "peerDependencies": {
+        "@vue/composition-api": "1.0.0-beta.21"
+    },
+    "files": [
+        "lib/**/*"
+    ],
+    "publishConfig": {
+        "access": "public"
+    }
+}
