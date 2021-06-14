@@ -76,7 +76,7 @@ export default {
         project-only-end */
     ['@pondigitalsolutions/opencommerce/nuxt', {
       api: {
-        uri: 'https://api-swapfiets-dev.pondigital.solutions/graphql'
+        uri: process.env.OC_API_URI
       }
     }]
   ],
