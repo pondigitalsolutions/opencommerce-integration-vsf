@@ -26,7 +26,7 @@ const onCreate = (settings: Config) => {
   const client = new ApolloClient({
     cache: new InMemoryCache(),
     link: authLink.concat(
-      createHttpLink({ uri: `${settings.api.uri}/graphql`, fetch })
+      createHttpLink({ uri: settings.api.uri, fetch })
     )
   });
 
