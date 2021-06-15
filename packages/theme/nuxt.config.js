@@ -51,12 +51,10 @@ export default {
       useRawSource: {
         dev: [
           '@pondigitalsolutions/opencommerce',
-          '@pondigitalsolutions/opencommerce-api',
           '@vue-storefront/core'
         ],
         prod: [
           '@pondigitalsolutions/opencommerce',
-          '@pondigitalsolutions/opencommerce-api',
           '@vue-storefront/core'
         ]
       }

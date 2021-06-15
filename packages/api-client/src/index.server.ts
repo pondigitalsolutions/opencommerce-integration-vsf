@@ -6,11 +6,11 @@ import fetch from 'isomorphic-fetch';
 
 import { apiClientFactory } from '@vue-storefront/core';
 import { Config } from './types';
-import { getCategory, getCategories } from './api/getCategory';
+import * as getCategory from './api/getCategory';
 
 const defaultSettings = {};
 
-const onCreate = (settings: Config) => {
+const onCreate = (settings) => {
   const authLink = setContext((_, { headers }) => {
     // get the authentication token from local storage if it exists
     const token = settings.getAccessToken();
@@ -22,6 +22,8 @@ const onCreate = (settings: Config) => {
       }
     };
   });
+
+  console.log('config', settings);
 
   const client = new ApolloClient({
     cache: new InMemoryCache(),
@@ -42,8 +44,7 @@ const onCreate = (settings: Config) => {
 const { createApiClient } = apiClientFactory<Config, any>({
   onCreate,
   api: {
-    getCategory,
-    getCategories
+    getCategory
   }
 });
 
