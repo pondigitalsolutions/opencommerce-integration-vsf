@@ -1,51 +1,89 @@
 import { ApolloClient } from 'apollo-client';
-import { createHttpLink } from 'apollo-link-http';
 import { InMemoryCache } from 'apollo-cache-inmemory';
-import { setContext } from 'apollo-link-context';
-import fetch from 'isomorphic-fetch';
-
-import { apiClientFactory } from '@vue-storefront/core';
+import { createLink } from './helpers/apolloClient';
+import { ApiClientExtension, apiClientFactory } from '@vue-storefront/core';
 import { Config } from './types';
-import * as getCategory from './api/getCategory';
 
-const defaultSettings = {};
+import getStore from './api/getStore';
+import getCategory from './api/getCategory';
 
-const onCreate = (settings) => {
-  const authLink = setContext((_, { headers }) => {
-    // get the authentication token from local storage if it exists
-    const token = settings.getAccessToken();
-    // return the headers to the context so httpLink can read them
+const defaultSettings = {
+  api: {
+    uri: 'http://localhost:3000/graphql'
+  },
+  cookies: {
+    cartCookieName: 'vsf-cart'
+  }
+};
+
+const onCreate = (settings: Config): { config: Config, client: ApolloClient<any> } => {
+
+  const config = {
+    ...defaultSettings,
+    ...settings,
+    getAccessToken: () => {
+      return '';
+    }
+  } as any as Config;
+
+  if (settings.client) {
+    return { client: settings.client, config };
+  }
+
+  if (settings.customOptions && settings.customOptions.link) {
     return {
-      headers: {
-        ...headers,
-        authorization: token ? `${token}` : ''
-      }
+      client: new ApolloClient({
+        cache: new InMemoryCache(),
+        ...settings.customOptions
+      }),
+      config
     };
-  });
+  }
 
-  console.log('config', settings);
+  const { apolloLink } = createLink(config);
 
   const client = new ApolloClient({
+    link: apolloLink,
     cache: new InMemoryCache(),
-    link: authLink.concat(
-      createHttpLink({ uri: settings.api.uri, fetch })
-    )
+    ...settings.customOptions
   });
 
   return ({
-    config: {
-      ...defaultSettings,
-      ...settings
-    },
+    config,
     client
   });
 };
 
-const { createApiClient } = apiClientFactory<Config, any>({
+const extension: ApiClientExtension = {
+  name: 'dataExtension',
+  hooks: (req, res) => ({
+    beforeCreate: ({ configuration }) => {
+      const cartCookieName = configuration.cookies?.cartCookieName || defaultSettings.cookies.cartCookieName;
+
+      return {
+        ...configuration,
+        state: {
+          getCartId: () => req.cookies[cartCookieName],
+          setCartId: (id) => {
+            if (!id) {
+              delete req.cookies[cartCookieName];
+              return;
+            }
+            res.cookie(cartCookieName, JSON.stringify(id));
+          }
+        }
+      };
+    }
+  })
+};
+
+const { createApiClient } = apiClientFactory({
   onCreate,
   api: {
+    getStore,
     getCategory
-  }
+  },
+  extensions: [extension]
 });
 
 export {

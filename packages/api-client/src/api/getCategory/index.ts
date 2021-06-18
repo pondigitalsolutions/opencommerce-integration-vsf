@@ -1,44 +1,20 @@
-import allCategoriesQuery from '../../graphql/allCategoriesQuery';
-import singleCategoryQuery from '../../graphql/singleCategoryQuery';
+import { CustomQuery } from '@vue-storefront/core';
+import ApolloClient from 'apollo-client';
+import gql from 'graphql-tag';
+import allCategoriesQuery from './allCategoriesQuery';
 
-type CategoriesQueryVariables = {
-    shopId: string;
-    pageSize?: number;
-    page?: number;
-    [x: string]: number | string;
-};
+const getCategory = async (context, params, customQuery?: CustomQuery) => {
+  const { categories } = context.extendQuery(customQuery,
+    { categories: { query: allCategoriesQuery, variables: params } }
+  );
 
-type CategoryQueryVariables = {
-    shopId: string;
-    slugOrId: string;
-    [x: string]: number | string;
-};
-
-const getCategories = async (context, searchParams: CategoriesQueryVariables) => {
-  const { shopId, pageSize, page, ...params } = searchParams;
-  const defaultParams = {
-    shopId,
-    pageSize: pageSize || 20,
-    page: page || 1,
-    ...params
-  };
-
-  return await context.client.query({
-    query: allCategoriesQuery,
-    variables: defaultParams,
+  const request = await (context.client as ApolloClient<any>).query<any[]>({
+    query: gql`${categories.query}`,
+    variables: categories.variables,
     fetchPolicy: 'no-cache'
   });
+
+  return request;
 };
 
-const getCategory = async (context, params: CategoryQueryVariables) => {
-  return context.client.query({
-    query: singleCategoryQuery,
-    variables: params,
-    fetchPolicy: 'no-cache'
-  });
-};
-
-export {
-  getCategory,
-  getCategories
-};
+export default getCategory;

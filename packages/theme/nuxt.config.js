@@ -45,6 +45,9 @@ export default {
     '@nuxt/typescript-build',
     '@nuxtjs/style-resources',
     ['@vue-storefront/nuxt', {
+      logger: {
+        verbosity: 'debug'
+      },
       // @core-development-only-start
       coreDevelopment: true,
       // @core-development-only-end
