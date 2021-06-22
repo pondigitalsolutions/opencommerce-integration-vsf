@@ -30,6 +30,7 @@ const createErrorHandler = () => {
 };
 
 const createLink = (settings: Config): any => {
+  console.log('createLink', settings.api.uri);
   const httpLink = createHttpLink({ uri: settings.api.uri, fetch });
   const onErrorLink = createErrorHandler();
 

@@ -4,12 +4,9 @@ import { useStoreFactory, UseStoreFactoryParams } from '../types/factories/useSt
 
 const factoryParams: UseStoreFactoryParams<Store> = {
   load: async (context: Context) => {
-    console.log('getStore', 'getting data...');
     const { data } = await context.$opencommerce.api.getStore();
 
-    console.log('Mocked:', data);
-
-    return data || null;
+    return data.primaryShopId || null;
   }
 };
 

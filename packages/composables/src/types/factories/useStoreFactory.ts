@@ -8,7 +8,7 @@ import { computed } from '@vue/composition-api';
 import { UseStore } from '../composables';
 
 export interface UseStoreFactoryParams<STORE> extends FactoryParams {
-    load: (context: Context) => Promise<STORE>;
+  load: (context: Context) => Promise<STORE>;
 }
 
 export function useStoreFactory<STORE>(factoryParams: UseStoreFactoryParams<STORE>) {
@@ -23,7 +23,6 @@ export function useStoreFactory<STORE>(factoryParams: UseStoreFactoryParams<STOR
       Logger.debug(`useStore/${ssrKey}/load`);
       loading.value = true;
       try {
-        console.log('factory', 'getting data');
         storeId.value = await _factoryParams.load();
       } finally {
         loading.value = false;

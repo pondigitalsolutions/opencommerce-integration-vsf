@@ -17,18 +17,31 @@ const getGrouped = (searchData, criteria?: string[]): AgnosticGroupedFacet[] => 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const getSortOptions = (searchData): AgnosticSort => ({ options: [], selected: '' });
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const getCategoryTree = (searchData): AgnosticCategoryTree => {
 
-  const items: AgnosticCategoryTree[] = [];
+  const items: AgnosticCategoryTree[] = [{
+    isCurrent: true,
+    items: null,
+    label: 'All'
+  }];
 
-  console.log(searchData.data.categories.nodes);
+  searchData.data.categories.tags.nodes.forEach(tag => {
 
-  searchData.data.categories.nodes.forEach(tag => {
+    const subTags: AgnosticCategoryTree[] = [];
+
+    tag.subTags.nodes.forEach(subTag => {
+      subTags.push({
+        slug: subTag.slug,
+        isCurrent: false,
+        label: subTag.displayTitle,
+        items: []
+      });
+    });
+
     items.push({
       slug: tag.slug,
       label: tag.displayTitle,
-      items: [],
+      items: subTags,
       isCurrent: false
     });
   });

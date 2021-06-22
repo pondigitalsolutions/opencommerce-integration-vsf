@@ -1,18 +1,17 @@
-import { Logger } from '@vue-storefront/core';
+import { CustomQuery } from '@vue-storefront/core';
 import { ApolloClient } from 'apollo-client';
+import gql from 'graphql-tag';
 import primaryShopIdQuery from './primaryShopId';
 
-const getStore = async (context) => {
+const getStore = async (context, customQuery?: CustomQuery) => {
+  const { shop } = context.extendQuery(customQuery,
+    { shop: { query: primaryShopIdQuery } }
+  );
 
-  console.log('getStore', 'in ApolloClient request...');
-
-  const request = await (context.client as ApolloClient<any>).query<any>({
-    query: primaryShopIdQuery,
-    variables: {},
+  const request = await (context.client as ApolloClient<any>).query({
+    query: gql`${shop.query}`,
     fetchPolicy: 'no-cache'
   });
-  Logger.debug(request);
-  console.log('getStore', request);
 
   return request;
 };

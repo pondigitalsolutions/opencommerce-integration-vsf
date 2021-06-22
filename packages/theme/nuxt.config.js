@@ -75,11 +75,7 @@ export default {
     /* project-only-start
         ['@vue-storefront/nuxt-theme'],
         project-only-end */
-    ['@pondigitalsolutions/opencommerce/nuxt', {
-      api: {
-        uri: process.env.OC_API_URI
-      }
-    }]
+    '@pondigitalsolutions/opencommerce/nuxt'
   ],
   modules: [
     'nuxt-i18n',

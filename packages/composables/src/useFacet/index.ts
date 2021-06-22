@@ -13,11 +13,8 @@ const factoryParams = {
     const { storeId, load } = context.store;
 
     try {
-
-      console.log('shopId', !storeId.value);
       if (!storeId.value) {
         await load();
-        console.log('shopId', storeId.value);
       }
 
       const filter = {
